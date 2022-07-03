@@ -18,6 +18,7 @@ class TestRoom(unittest.TestCase):
         
         self.song_1 = Song("Signs", "Snoop Dogg")
         self.song_2 = Song("Technologic", "Daft Punk")
+        self.song_3 = Song("Hey Jude", "The Beatles")
 
     
     def test_room_has_name(self):
@@ -66,7 +67,7 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(19, self.room_3.till)
         self.assertEqual(1, self.guest_4.wallet)
     
-    def test_guest_can_afford_higher_fee_no_capacity(self):
+    def test_guest_rejected_can_afford_higher_fee_no_capacity(self):
         self.room_3.add_guest_to_room(self.guest_4)
         self.guest_4.pay_entrance_fee(self.room_3.fee)
         self.room_3.add_guest_to_room(self.guest_3)
@@ -89,3 +90,33 @@ class TestRoom(unittest.TestCase):
         self.room_1.add_guest_to_room(self.guest_4)
         self.assertEqual(30, self.room_1.till)
         self.assertEqual(3, self.room_1.check_capacity())
+    
+    
+    def test_guest_favourite_song_in_playlist_true(self):
+        self.room_1.add_guest_to_room(self.guest_1)
+        self.room_1.add_song_to_playlist(self.song_1.name, self.song_1.artist)
+        self.room_1.add_song_to_playlist(self.song_2.name, self.song_2.artist)
+        self.room_1.add_song_to_playlist(self.song_3.name, self.song_3.artist)
+        self.guest_1.check_playlist_for_favourite_song(self.room_1.playlist)
+        self.assertEqual(True, self.guest_1.check_playlist_for_favourite_song(self.room_1.playlist))
+    
+    def test_guest_favourite_song_in_playlist_false(self):
+        self.room_1.add_guest_to_room(self.guest_1)
+        self.room_1.add_song_to_playlist(self.song_1.name, self.song_1.artist)
+        self.room_1.add_song_to_playlist(self.song_2.name, self.song_2.artist)
+        self.guest_1.check_playlist_for_favourite_song(self.room_1.playlist)
+        self.assertEqual(False, self.guest_1.check_playlist_for_favourite_song(self.room_1.playlist))
+    
+    def test_react_to_favourite_song_positive(self):
+        self.room_1.add_guest_to_room(self.guest_1)
+        self.room_1.add_song_to_playlist(self.song_3.name, self.song_3.artist)
+        self.guest_1.check_playlist_for_favourite_song(self.room_1.playlist)
+        self.guest_1.react_to_favourite_song(self.room_1.playlist)
+        self.assertEqual("Whooo yeah! This is my jam.", self.guest_1.react_to_favourite_song(self.room_1.playlist))
+    
+    def test_react_to_favourite_song_negative(self):
+        self.room_1.add_guest_to_room(self.guest_1)
+        self.room_1.add_song_to_playlist(self.song_2.name, self.song_2.artist)
+        self.guest_1.check_playlist_for_favourite_song(self.room_1.playlist)
+        self.guest_1.react_to_favourite_song(self.room_1.playlist)
+        self.assertEqual("No singing for me today", self.guest_1.react_to_favourite_song(self.room_1.playlist))
