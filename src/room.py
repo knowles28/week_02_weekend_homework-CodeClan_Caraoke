@@ -1,10 +1,8 @@
-# from song import Song
-
 class Room:
-    def __init__(self, _room_name, _capacity, _till, _current_song):
+    def __init__(self, _room_name, _capacity, _till):
         self.room_name = _room_name
         self.capacity = _capacity
-        self.current_song = _current_song
+        self.playlist = {}
         self.guests = []
         self.room_till = _till
     
@@ -16,3 +14,6 @@ class Room:
         
     def remove_guest_from_room(self, guest):
         self.guests.remove(guest)
+    
+    def add_song_to_playlist(self, new_song, artist):
+        self.playlist.update({new_song: artist})
